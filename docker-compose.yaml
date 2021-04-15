@@ -1,0 +1,44 @@
+version: "3.5"
+
+services:
+  database:
+    container_name: "mongodtb"
+    image: mongo:3-xenial
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: project
+    ports:
+      - "8081:27017"
+    volumes:
+      - ./database/log:/var/log/mongodb
+      - ./database/data:/data
+      # - ./Backend/Database/startup:/Backend/Database/startup:ro
+    networks:
+      backend:
+        ipv4_address: "10.1.0.2"
+  nodebackend:
+    container_name: "nodebackend"
+    build:
+      context: ./backend
+      dockerfile: dockerfile.node
+    ports:
+      - "8086:3000"
+    depends_on:
+      - database
+    environment:
+      MONGO_URI: mongodb://root:root@10.1.0.2:27017/
+      NAME_DATABASE: project
+    volumes:
+      - ./backend:/app
+
+    networks:
+      backend:
+        ipv4_address: "10.1.0.3"
+networks:
+  backend:
+    ipam:
+      driver: default
+      config:
+        - subnet: "10.1.0.0/27"
