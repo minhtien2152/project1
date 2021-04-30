@@ -1,15 +1,42 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const cors = require("cors")
+const xss = require('xss-clean');
+const helmet = require("helmet")
 const path = require('path');
 const app = express();
-
-const MongoClient = require('mongodb').MongoClient
-
-
+const globalErrHandler = require('./controllers/errorController');
+const AppError = require('./utils/appError');
+const rateLimit = require("express-rate-limit");
+const expressMongoSanitize = require("express-mongo-sanitize");
+const hpp = require("hpp");
+app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000;
+
+// Allow Cross-Origin requests
+app.use(cors());
+
+// Set security HTTP headers
+app.use(helmet());
+
+const limiter = rateLimit({
+  max: 150,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too Many Request from this IP, please try again in an hour'
+});
+app.use('/api', limiter);
+
+// Data sanitization against Nosql query injection
+app.use(expressMongoSanitize());
+
+// Data sanitization against XSS(clean user input from malicious HTML code)
+app.use(xss());
+
+// Prevent parameter pollution
+app.use(hpp());
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
@@ -46,5 +73,13 @@ app.post("/uploadmultiple", upload.array("files", 12), (req, res, next) => {
   }
   res.send(files);
 });
+
+// handle undefined Routes
+app.use('*', (req, res, next) => {
+  const err = new AppError(404, 'fail', 'undefined route');
+  next(err, req, res, next);
+});
+
+app.use(globalErrHandler);
 
 app.listen(3000, () => console.log("Server started on port 3000"));
