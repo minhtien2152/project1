@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-
+const randomAvatar = require("../utils/avatar")
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -44,6 +44,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+      default: randomAvatar()
     },
     gender: {
       type: String,

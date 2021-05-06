@@ -1,15 +1,15 @@
-import { Mongoose } from "mongoose";
+const mongoose = require("mongoose")
 
 const URL = "https://avatars.dicebear.com/api/avataaars/";
 
-const generateRandomAvatar = async (sex) => {
-  mongoose.Types.ObjectId();
+const generateRandomAvatar = () => {
+  
   let hair = "";
-  if (sex === "male") hair = "top[]=shortHair";
-  else if (sex === "female") hair = "top[]=longHair";
-  const genUrl = URL + "?" + hair;
-
-  return downloadImage(genUrl);
+  if (Math.random()%2===1) hair = "top[]=shortHair";
+  else hair = "top[]=longHair";
+  const genUrl = URL +mongoose.Types.ObjectId()+ ".svg?mood[]=happy&" + hair;
+  
+  return genUrl;
 };
 
 async function downloadImage(url) {
@@ -20,4 +20,4 @@ async function downloadImage(url) {
   return fileName;
 }
 
-export default generateRandomAvatar;
+module.exports = generateRandomAvatar

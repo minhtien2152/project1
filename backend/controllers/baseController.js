@@ -11,7 +11,8 @@ exports.deleteOne = Model => async (req, res, next) => {
 
         res.status(204).json({
             status: 'success',
-            data: null
+            data: null,
+            message:"deleted one document"
         });
     } catch (error) {
         next(error);
@@ -31,9 +32,9 @@ exports.updateOne = Model => async (req, res, next) => {
 
         res.status(200).json({
             status: 'success',
-            data: {
+            data: 
                 doc
-            }
+            
         });
 
     } catch (error) {
@@ -47,9 +48,9 @@ exports.createOne = Model => async (req, res, next) => {
 
         res.status(201).json({
             status: 'success',
-            data: {
+            data: 
                 doc
-            }
+            
         });
 
     } catch (error) {
@@ -67,9 +68,9 @@ exports.getOne = Model => async (req, res, next) => {
 
         res.status(200).json({
             status: 'success',
-            data: {
-                doc
-            }
+            data: 
+               doc
+            
         });
     } catch (error) {
         next(error);

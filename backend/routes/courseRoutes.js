@@ -14,9 +14,15 @@ router
 
 router.use(authController.protect);
 
+router.use(authController.restrictTo('admin'));
+
+router
+    .route('/')
+    .post(courseController.createCourse);
+
 router
     .route('/:id')
-    .patch(authController.restrictTo('admin'),courseController.updateCourse)
-    .delete(authController.restrictTo('admin'),courseController.deleteCourse);
+    .patch(courseController.updateCourse)
+    .delete(courseController.deleteCourse);
 
 module.exports = router;
