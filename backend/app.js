@@ -5,16 +5,23 @@ const cors = require("cors")
 const xss = require('xss-clean');
 const helmet = require("helmet")
 const path = require('path');
-const app = express();
-const globalErrHandler = require('./controllers/errorController');
-const AppError = require('./utils/appError');
 const rateLimit = require("express-rate-limit");
 const expressMongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
+
+const app = express();
+
+const globalErrHandler = require('./controllers/errorController');
+const userRoutes = require('./routes/userRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const AppError = require('./utils/appError');
+
+
+
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const port = process.env.PORT || 3000;
+
 
 // Allow Cross-Origin requests
 app.use(cors());
@@ -53,6 +60,9 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
+app.use('/api/users', userRoutes);
+app.use('/api/courses', courseRoutes);
+
 app.post("/uploadfile", upload.single("myFiles"), (req, res, next) => {
   const file = req.file;
   if (!file) {
@@ -82,4 +92,4 @@ app.use('*', (req, res, next) => {
 
 app.use(globalErrHandler);
 
-app.listen(3000, () => console.log("Server started on port 3000"));
+module.exports = app;

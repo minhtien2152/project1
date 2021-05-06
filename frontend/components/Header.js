@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -8,11 +8,13 @@ import {
   XIcon,
 } from "@heroicons/react/outline";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, reload } from "../actions/userActions";
 
 const navigation = [
   { name: "Trang chủ", href: "/", current: true },
-  { name: "Danh mục", href: "#", current: false },
-  { name: "Nhà cung cấp", href: "#", current: false },
+  { name: "Danh mục", href: "/login", current: false },
+  { name: "Nhà cung cấp", href: "/signup", current: false },
   { name: "Liên hệ", href: "#", current: false },
 ];
 
@@ -22,6 +24,24 @@ function classNames(...classes) {
 
 export default function Header() {
   const [isLogin, setIsLogin] = useState(false);
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  useEffect(() => {
+    if (!userInfo)
+      if (localStorage.getItem("userInfo")) {
+        dispatch(reload(localStorage.getItem("userInfo")));
+        setIsLogin(true);
+      } else setIsLogin(false);
+    else setIsLogin(true);
+  }, [dispatch, userInfo]);
+
+  const logOutHandler = () => {
+    dispatch(logout());
+  };
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -123,6 +143,7 @@ export default function Header() {
                             leave="transition ease-in duration-75"
                             leaveFrom="transform opacity-100 scale-100"
                             leaveTo="transform opacity-0 scale-95"
+                            style={{ zIndex: "999" }}
                           >
                             <Menu.Items
                               static
@@ -157,7 +178,7 @@ export default function Header() {
                               <Menu.Item>
                                 {({ active }) => (
                                   <a
-                                    href="#"
+                                    onClick={logOutHandler}
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
                                       "block px-4 py-2 text-sm text-gray-700"
@@ -181,19 +202,19 @@ export default function Header() {
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={classNames(
-                    item.current
-                      ? "bg-gray-900 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                    "block px-3 py-2 rounded-md text-base font-medium"
-                  )}
-                  aria-current={item.current ? "page" : undefined}
-                >
-                  {item.name}
-                </a>
+                <Link key={item.name} href={item.href}>
+                  <a
+                    className={classNames(
+                      item.current
+                        ? "bg-gray-900 text-white"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                      "block px-3 py-2 rounded-md text-base font-medium"
+                    )}
+                    aria-current={item.current ? "page" : undefined}
+                  >
+                    {item.name}
+                  </a>
+                </Link>
               ))}
             </div>
           </Disclosure.Panel>

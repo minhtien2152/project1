@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
-const getUrl = "https://unica.vn/course/ngoai-ngu";
+const getUrl = "https://unica.vn/course/thiet-ke";
 
 const pageUrl = "https://unica.vn";
 (async () => {
@@ -40,16 +40,41 @@ const pageUrl = "https://unica.vn";
         const price = document.querySelector(".big-price").innerText;
         const duration = document.querySelector("li >p").innerText;
         const rating = document.querySelector(".number-big-rate").innerText;
-
-        return { title, description, price, duration, rating };
+        let media;
+        if (document.querySelector(".u-video > img"))
+          media = {
+            url: document.querySelector(".u-video > img").src,
+            type: "img",
+          };
+        else if (document.querySelector(".embed-responsive-item"))
+          media = {
+            url: document.querySelector(".embed-responsive-item").src,
+            type: "video",
+          };
+        const lang = document
+          .getElementsByTagName("html")[0]
+          .getAttribute("xml:lang");
+        const url = document.location.href;
+        return {
+          title,
+          description,
+          price,
+          duration,
+          rating,
+          media,
+          lang,
+          url,
+        };
       });
 
       await page.close();
       return course;
     })
   );
-
-  fs.writeFileSync("unica1.json", JSON.stringify(info), (err) => {
+  let rawdata = fs.readFileSync("unica1.json");
+  let data = JSON.parse(rawdata);
+  const newData = [...data, ...info];
+  fs.writeFileSync("unica1.json", JSON.stringify(newData), (err) => {
     if (err) console.log(err);
   });
 

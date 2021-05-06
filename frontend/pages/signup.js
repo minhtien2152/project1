@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Col,
@@ -9,10 +9,39 @@ import {
   FormCheck,
   Container,
   InputGroup,
+  Alert,
 } from "@themesberg/react-bootstrap";
 import Link from "next/link";
+import Router from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../actions/userActions";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
+
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, error, userInfo } = userRegister;
+
+  useEffect(() => {
+    if (userInfo) {
+      Router.push("/");
+    }
+  }, [userInfo]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setMessage("Password do not match");
+    } else {
+      dispatch(register(name, email, password, confirmPassword));
+    }
+  };
+
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -29,7 +58,24 @@ const SignUp = () => {
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h3 className="mb-0">Create an account</h3>
                 </div>
-                <Form className="mt-4">
+                {message && <Alert variant="danger">{message}</Alert>}
+                {error && <Alert variant="danger">{error}</Alert>}
+                <Form className="mt-4" onSubmit={submitHandler}>
+                  <Form.Group id="name" className="mb-4">
+                    <Form.Label>Your name</Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <i class="fas fa-user-circle"></i>
+                      </InputGroup.Text>
+                      <Form.Control
+                        autoFocus
+                        required
+                        type="text"
+                        placeholder="Name"
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </InputGroup>
+                  </Form.Group>
                   <Form.Group id="email" className="mb-4">
                     <Form.Label>Your Email</Form.Label>
                     <InputGroup>
@@ -41,6 +87,7 @@ const SignUp = () => {
                         required
                         type="email"
                         placeholder="example@company.com"
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </InputGroup>
                   </Form.Group>
@@ -54,6 +101,7 @@ const SignUp = () => {
                         required
                         type="password"
                         placeholder="Password"
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </InputGroup>
                   </Form.Group>
@@ -67,6 +115,7 @@ const SignUp = () => {
                         required
                         type="password"
                         placeholder="Confirm Password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                       />
                     </InputGroup>
                   </Form.Group>

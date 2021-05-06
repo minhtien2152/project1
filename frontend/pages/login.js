@@ -9,8 +9,31 @@ import {
   InputGroup,
 } from "@themesberg/react-bootstrap";
 import Link from "next/link";
+import Router from "next/router";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../actions/userActions";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
+
+  useEffect(() => {
+    if (userInfo) {
+      Router.push("/");
+    }
+  }, [userInfo]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
+  };
+
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -32,13 +55,14 @@ const Login = () => {
                     <Form.Label>Your Email</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
-                        <i class="fas fa-envelope"></i>
+                        <i className="fas fa-envelope"></i>
                       </InputGroup.Text>
                       <Form.Control
                         autoFocus
                         required
                         type="email"
                         placeholder="example@company.com"
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </InputGroup>
                   </Form.Group>
@@ -47,12 +71,13 @@ const Login = () => {
                       <Form.Label>Your Password</Form.Label>
                       <InputGroup>
                         <InputGroup.Text>
-                          <i class="fas fa-unlock-alt"></i>
+                          <i className="fas fa-unlock-alt"></i>
                         </InputGroup.Text>
                         <Form.Control
                           required
                           type="password"
                           placeholder="Password"
+                          onChange={(e) => setPassword(e.target.value)}
                         />
                       </InputGroup>
                     </Form.Group>
@@ -71,7 +96,12 @@ const Login = () => {
                       </Card.Link>
                     </div>
                   </Form.Group>
-                  <Button variant="primary" type="submit" className="w-100">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    className="w-100"
+                    onClick={(e) => submitHandler(e)}
+                  >
                     Sign in
                   </Button>
                 </Form>

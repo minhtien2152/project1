@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+const mongoose = require ("mongoose");
 
 const courseSchema = mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
@@ -13,11 +13,14 @@ const courseSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    image: {
-      type: String,
+    media: {
+      url :{type: String},
+      type:{type: String,
+        enum: ["img", "video"],
+        default: "img"}
     },
     url: { type: String },
-    price: { type: Number },
+    price: { type: String },
     duration: { type: String },
     sale_detail: { type: Number },
   },
@@ -28,4 +31,4 @@ const courseSchema = mongoose.Schema(
 
 const Course = mongoose.model("Course", courseSchema);
 
-export default Course;
+module.exports = Course;

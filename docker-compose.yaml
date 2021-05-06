@@ -30,6 +30,10 @@ services:
     environment:
       MONGO_URI: mongodb://root:root@10.1.0.2:27017/
       NAME_DATABASE: project
+      NODE_ENVIROMMENT: development 
+      PORT: 3000
+      JWT_SECRET: 7d0c3827e0246b3b119cbf0d2a493f6ffd8960bcd6e40f25f51999044545a4b4                
+      JWT_EXPIRES_IN: 30d
     volumes:
       - ./backend:/app
 
