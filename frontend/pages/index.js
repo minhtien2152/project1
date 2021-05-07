@@ -6,9 +6,22 @@ import "swiper/components/navigation/navigation.min.css";
 import SwiperCore, { Navigation, Pagination } from "swiper";
 SwiperCore.use([Navigation, Pagination]);
 import Course from "../components/Course";
-import Layout from "../components/layout";
 import styles from "../styles/index.module.scss";
-export default function Home() {
+
+import { connect, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
+import { listCourses } from "../actions/courseActions";
+import { useEffect } from "react";
+import { initializeStore } from "../store";
+
+const Index = (props) => {
+  // useEffect(() => {
+  //   props.listCourses();
+  // }, [props]);
+
+  const courseList = useSelector((state) => state.courseList);
+  const { courses } = courseList;
+
   const settings = {
     preloadImages: false,
     slidesPerView: 4,
@@ -23,8 +36,8 @@ export default function Home() {
     //   dynamicBullets: true,
     // },
     navigation: {
-      nextEl: ".listing-carousel-button-next2",
-      prevEl: ".listing-carousel-button-prev2",
+      nextEl: ".nav_next",
+      prevEl: ".nav_prev",
     },
     breakpoints: {
       1650: {
@@ -57,9 +70,9 @@ export default function Home() {
           <div className="row justify-content-center">
             <div className="col-xl-8 col-lg-10">
               <div className={styles.header_content}>
-                <div class="container mx-auto py-8">
+                <div className="container mx-auto py-8">
                   <input
-                    class="w-full h-16 px-3 rounded focus:outline-none focus:shadow-outline text-xl shadow-lg"
+                    className="w-full h-16 px-3 rounded focus:outline-none focus:shadow-outline text-xl shadow-lg"
                     type="search"
                     placeholder="Search..."
                   />
@@ -73,24 +86,46 @@ export default function Home() {
           <img src="/images/header-shape.svg" alt="shape" />
         </div>
       </div>
-      <Swiper {...settings}>
-        <SwiperSlide>
-          <Course />
-        </SwiperSlide>
 
-        <SwiperSlide>
-          <Course />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Course />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Course />
-        </SwiperSlide>
-        <SwiperSlide>
-          <Course />
-        </SwiperSlide>
+      <div className={styles.section_title}>
+        <h2>Các khóa học được đánh giá cao</h2>
+        <div className={styles.section_subtitle}>
+          Các khóa học được đánh giá cao
+        </div>
+        <span className={styles.section_separator}></span>
+      </div>
+      <Swiper {...settings}>
+        {courses &&
+          courses.slice(5).map((course, index) => (
+            <SwiperSlide id={index}>
+              <Course course={course} />
+            </SwiperSlide>
+          ))}
+        <div className="nav_next">
+          <div
+            class={`${styles.listing_carousel_button} ${styles.listing_carousel_button_next2}`}
+          >
+            <i class="fas fa-caret-right"></i>
+          </div>
+        </div>
+        <div className="nav_prev">
+          <div
+            class={`${styles.listing_carousel_button} ${styles.listing_carousel_button_prev2}`}
+          >
+            <i class="fas fa-caret-left"></i>
+          </div>
+        </div>
       </Swiper>
     </>
   );
-}
+};
+
+export const getStaticProps = async () => {
+  const reduxStore = initializeStore();
+  const { dispatch } = reduxStore;
+  await dispatch(listCourses());
+
+  return { props: { initialReduxState: reduxStore.getState() } };
+};
+
+export default Index;

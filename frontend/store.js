@@ -4,20 +4,22 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
 import { userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
 
-const reducer = combineReducers({
+import {
+  courseDetailReducer,
+  courseListReducer,
+} from "./reducers/courseReducers";
+const reducers = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
+  courseList: courseListReducer,
+  courseDetails: courseDetailReducer,
 });
-
-// const userInfoFromStorage = window.localStorage.getItem("userInfo")
-//   ? JSON.parse(window.localStorage.getItem("userInfo"))
-//   : null;
 
 let store;
 
 function initStore(initialState) {
   return createStore(
-    reducer,
+    reducers,
     initialState,
     composeWithDevTools(applyMiddleware(thunkMiddleware))
   );

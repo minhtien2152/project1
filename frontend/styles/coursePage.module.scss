@@ -1,0 +1,26 @@
+.description {
+  white-space: pre-wrap;
+  padding: 10px;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+.section {
+  background-color: white;
+  margin-bottom: 8px;
+}
+
+.heading {
+  border-bottom: 1px solid #ddd;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 15px 10px;
+}
+.card {
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%), 0 4px 12px rgb(0 0 0 / 8%);
+}
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}

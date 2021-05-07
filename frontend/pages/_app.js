@@ -4,11 +4,9 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "../styles/scss/volt.scss";
 import "tailwindcss/tailwind.css";
 import Layout from "../components/layout";
-
 import { Provider } from "react-redux";
 import { useStore } from "../store";
-
-export default function App({ Component, pageProps }) {
+const App = ({ Component, pageProps }) => {
   const store = useStore(pageProps.initialReduxState);
 
   return (
@@ -18,4 +16,6 @@ export default function App({ Component, pageProps }) {
       </Layout>
     </Provider>
   );
-}
+};
+
+export default App;

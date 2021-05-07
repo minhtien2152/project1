@@ -129,7 +129,7 @@ export default function Header() {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-9 w-9 rounded-full bg-white"
-                                src={`${userInfo.user.avatar}`}
+                                src={`${userInfo && userInfo.user.avatar}`}
                                 alt=""
                               />
                             </Menu.Button>
