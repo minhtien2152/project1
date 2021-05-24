@@ -1,53 +1,28 @@
-import { useMemo } from "react";
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { createStore, applyMiddleware } from "redux";
+import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import thunkMiddleware from "redux-thunk";
-import { userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
+import reducers from "./reducers/reducers";
+import { composeWithDevTools } from "redux-devtools-extension";
 
-import {
-  courseDetailReducer,
-  courseListReducer,
-} from "./reducers/courseReducers";
-const reducers = combineReducers({
-  userLogin: userLoginReducer,
-  userRegister: userRegisterReducer,
-  courseList: courseListReducer,
-  courseDetails: courseDetailReducer,
-});
-
-let store;
-
-function initStore(initialState) {
-  return createStore(
-    reducers,
-    initialState,
-    composeWithDevTools(applyMiddleware(thunkMiddleware))
-  );
-}
-
-export const initializeStore = (preloadedState) => {
-  let _store = store ?? initStore(preloadedState);
-
-  // After navigating to a page with an initial Redux state, merge that state
-  // with the current state in the store, and create a new store
-  if (preloadedState && store) {
-    _store = initStore({
-      ...store.getState(),
-      ...preloadedState,
-    });
-    // Reset the current store
-    store = undefined;
+const reducer = (state, action) => {
+  if (action.type === HYDRATE) {
+    const nextState = {
+      ...state,
+      ...action.payload,
+    };
+    return nextState;
+  } else {
+    return reducers(state, action);
   }
-
-  // For SSG and SSR always create a new store
-  if (typeof window === "undefined") return _store;
-  // Create the store once in the client
-  if (!store) store = _store;
-
-  return _store;
 };
 
-export function useStore(initialState) {
-  const store = useMemo(() => initializeStore(initialState), [initialState]);
-  return store;
-}
+const middleware = [thunkMiddleware];
+
+const initStore = () => {
+  return createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(...middleware))
+  );
+};
+
+export const wrapper = createWrapper(initStore);

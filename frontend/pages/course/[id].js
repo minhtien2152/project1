@@ -3,7 +3,7 @@ import { bindActionCreators } from "redux";
 import router from "next/router";
 import { useEffect } from "react";
 import { listCourseDetails, listCourses } from "../../actions/courseActions";
-import { initializeStore } from "../../store";
+import { initializeStore, wrapper } from "../../store";
 import {
   Button,
   Card,
@@ -16,7 +16,7 @@ import styles from "../../styles/coursePage.module.scss";
 const CoursePage = (props) => {
   const courseDetails = useSelector((state) => state.courseDetails);
   const { loading, error, course } = courseDetails;
-  console.log(course.description);
+
   return (
     <div className="container">
       {!loading && course && (
@@ -90,30 +90,27 @@ const CoursePage = (props) => {
   );
 };
 
-export const getStaticProps = async ({ params }) => {
-  const reduxStore = initializeStore();
-  const { dispatch } = reduxStore;
+export const getServerSideProps = wrapper.getServerSideProps(
+  async ({ params, store }) => {
+    await store.dispatch(listCourseDetails(params.id));
+  }
+);
 
-  await dispatch(listCourseDetails(params.id));
+// export const getStaticPaths =  wrapper.getStaticPaths() {
+//   const reduxStore = initializeStore();
+//   const { dispatch } = reduxStore;
+//   await dispatch(listCourses());
 
-  return { props: { initialReduxState: reduxStore.getState() } };
-};
+//   const courses = reduxStore.getState().courseList.courses;
 
-export async function getStaticPaths() {
-  const reduxStore = initializeStore();
-  const { dispatch } = reduxStore;
-  await dispatch(listCourses());
+//   const paths = courses.map((course) => ({
+//     params: { id: course._id },
+//   }));
 
-  const courses = reduxStore.getState().courseList.courses;
-
-  const paths = courses.map((course) => ({
-    params: { id: course._id },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
+//   return {
+//     paths,
+//     fallback: false,
+//   };
+// }
 
 export default CoursePage;

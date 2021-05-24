@@ -2,6 +2,7 @@ import Link from "next/link";
 import styles from "../styles/course.module.scss";
 import { Card } from "@themesberg/react-bootstrap";
 import { useEffect, useState } from "react";
+import { handleMedia } from "../lib/utils";
 const Course = ({ course }) => {
   const [media, setUrl] = useState("");
 
@@ -9,20 +10,13 @@ const Course = ({ course }) => {
     setUrl(course.media.url);
   }, [course]);
 
-  const handleMedia = () => {
-    const str1 = media.split("https://www.youtube.com/embed/")[1];
-    const str2 = str1.split("?rel");
-    console.log(str2[0]);
-    const result = "https://img.youtube.com/vi/" + str2[0] + "/hqdefault.jpg";
-    return result;
-  };
   return (
     <Card className={styles.card}>
       {media !== "" && (
         <Card.Img
           variant="top"
           className={styles.card_img}
-          src={`${handleMedia()}`}
+          src={`${handleMedia(media)}`}
         />
       )}
       <Card.Body>

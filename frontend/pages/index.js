@@ -12,7 +12,7 @@ import { connect, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { listCourses } from "../actions/courseActions";
 import { useEffect } from "react";
-import { initializeStore } from "../store";
+import { wrapper } from "../store";
 
 const Index = (props) => {
   // useEffect(() => {
@@ -120,12 +120,18 @@ const Index = (props) => {
   );
 };
 
-export const getStaticProps = async () => {
-  const reduxStore = initializeStore();
-  const { dispatch } = reduxStore;
-  await dispatch(listCourses());
+// export const getStaticProps = async () => {
+//   const reduxStore = initializeStore();
+//   const { dispatch } = reduxStore;
+//   await dispatch(listCourses());
 
-  return { props: { initialReduxState: reduxStore.getState() } };
-};
+//   return { props: { initialReduxState: reduxStore.getState() } };
+// };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async ({ store }) => {
+    await store.dispatch(listCourses());
+  }
+);
 
 export default Index;

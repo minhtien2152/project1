@@ -1,8 +1,14 @@
 import {
+  USER_COURSES_FAIL,
+  USER_COURSES_REQUEST,
+  USER_COURSES_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
+  USER_PROFILE_FAIL,
+  USER_PROFILE_REQUEST,
+  USER_PROFILE_SUCCESS,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
@@ -33,6 +39,33 @@ export const userRegisterReducer = (state = {}, action) => {
     case USER_REGISTER_SUCCESS:
       return { loading: false, userInfo: action.payload };
     case USER_REGISTER_FAIL:
+      return { loading: true, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+export const userProfileReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_PROFILE_REQUEST:
+      return { loading: true };
+    case USER_PROFILE_SUCCESS:
+      return { loading: false, profile: action.payload };
+    case USER_PROFILE_FAIL:
+      return { loading: true, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+export const userCoursesReducer = (state = { courses: [] }, action) => {
+  switch (action.type) {
+    case USER_COURSES_REQUEST:
+      return { loading: true };
+    case USER_COURSES_SUCCESS:
+      return { loading: false, courses: action.payload };
+    case USER_COURSES_FAIL:
       return { loading: true, error: action.payload };
 
     default:

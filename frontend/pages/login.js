@@ -24,10 +24,10 @@ const Login = () => {
   const { loading, error, userInfo } = userLogin;
 
   useEffect(() => {
-    if (userInfo) {
+    if (localStorage.getItem("userInfo")) {
       Router.push("/");
     }
-  }, [userInfo]);
+  }, []);
 
   const submitHandler = (e) => {
     e.preventDefault();

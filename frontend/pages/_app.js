@@ -4,18 +4,14 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "../styles/scss/volt.scss";
 import "tailwindcss/tailwind.css";
 import Layout from "../components/layout";
-import { Provider } from "react-redux";
-import { useStore } from "../store";
-const App = ({ Component, pageProps }) => {
-  const store = useStore(pageProps.initialReduxState);
 
+import { wrapper } from "../store";
+const App = ({ Component, pageProps }) => {
   return (
-    <Provider store={store}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </Provider>
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
   );
 };
 
-export default App;
+export default wrapper.withRedux(App);

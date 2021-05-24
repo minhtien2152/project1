@@ -11,6 +11,18 @@ router.post('/signup', authController.signup);
 router.use(authController.protect);
 
 router.delete('/deleteMe', userController.deleteMe);
+router
+    .route('/:id')
+    .get(userController.getUser)
+    .patch(userController.updateUser)
+    .delete(userController.deleteUser);
+router
+    .route('/:id/courses')
+    .get(userController.getCourses)
+router
+    .route('/:id/courses/:idcourse')
+    .delete(userController.deleteCourse)
+
 
 // Only admin have permission to access for the below APIs 
 router.use(authController.restrictTo('admin'));
@@ -20,10 +32,5 @@ router
     .get(userController.getAllUsers);
 
 
-router
-    .route('/:id')
-    .get(userController.getUser)
-    .patch(userController.updateUser)
-    .delete(userController.deleteUser);
 
 module.exports = router;

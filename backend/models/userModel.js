@@ -51,9 +51,13 @@ const userSchema = new mongoose.Schema(
       enum: ["male", "female", "null"],
       default: "male",
     },
-    list_liked_course: {
-      type: [String],
-    },
+    courses: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course"
+    }],
+    intro :{
+      type : String
+    }
   },
   {
     timestamps: true,

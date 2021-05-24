@@ -1,0 +1,147 @@
+/* -------------------------------------------------------------------
+  Microtip */
+.tolt:before,
+.tolt:after {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+  position: absolute;
+  box-sizing: border-box;
+  z-index: 10;
+  transform-origin: top;
+}
+.tolt:before {
+  background-size: 100% auto !important;
+  content: "";
+}
+.tolt::after {
+  border-radius: 2px;
+  background: #313e6e;
+  color: #fff;
+  content: attr(data-tooltip);
+  font-size: 11px;
+  font-weight: 400;
+  padding: 0 20px;
+  height: 30px;
+  line-height: 30px;
+  white-space: nowrap;
+  box-sizing: content-box;
+}
+.tolt:hover::before,
+.tolt:hover::after {
+  opacity: 1;
+  pointer-events: auto;
+}
+.tolt[data-microtip-position|="top"]::after {
+  margin-bottom: 11px;
+}
+.tolt[data-microtip-position|="top"]::before {
+  transform: translate3d(-50%, 0, 0);
+  bottom: 100%;
+  left: 50%;
+}
+.tolt[data-microtip-position|="top"]:hover::before {
+  transform: translate3d(-50%, -5px, 0);
+}
+.tolt[data-microtip-position|="top"]::after {
+  transform: translate3d(-50%, 0, 0);
+  bottom: 100%;
+  left: 50%;
+}
+.tolt[data-microtip-position="top"]:hover::after {
+  transform: translate3d(-50%, -5px, 0);
+}
+.tolt[data-microtip-position="top-left"]::after {
+  transform: translate3d(calc(-100% + 16px), 0, 0);
+  bottom: 100%;
+}
+
+.tolt[data-microtip-position="top-left"]:hover::after {
+  transform: translate3d(calc(-100% + 16px), -5px, 0);
+}
+.tolt[data-microtip-position="top-right"]::after {
+  transform: translate3d(calc(0% + -16px), 0, 0);
+  bottom: 100%;
+}
+.tolt[data-microtip-position="top-right"]:hover::after {
+  transform: translate3d(calc(0% + -16px), -5px, 0);
+}
+.tolt[data-microtip-position|="bottom"]::after {
+  margin-top: 11px;
+}
+[role~="tooltip"][data-microtip-position|="bottom"]::before {
+  transform: translate3d(-50%, -10px, 0);
+  bottom: auto;
+  left: 50%;
+  top: 100%;
+}
+.tolt[data-microtip-position|="bottom"]:hover::before {
+  transform: translate3d(-50%, 0, 0);
+}
+.tolt[data-microtip-position|="bottom"]::after {
+  transform: translate3d(-50%, -10px, 0);
+  top: 100%;
+  left: 50%;
+}
+.tolt[data-microtip-position="bottom"]:hover::after {
+  transform: translate3d(-50%, 0, 0);
+}
+.tolt[data-microtip-position="bottom-left"]::after {
+  transform: translate3d(calc(-100% + 16px), -10px, 0);
+  top: 100%;
+}
+[role~="tooltip"][data-microtip-position="bottom-left"]:hover::after {
+  transform: translate3d(calc(-100% + 16px), 0, 0);
+}
+.tolt[data-microtip-position="bottom-right"]::after {
+  transform: translate3d(calc(0% + -16px), -10px, 0);
+  top: 100%;
+}
+.tolt[data-microtip-position="bottom-right"]:hover::after {
+  transform: translate3d(calc(0% + -16px), 0, 0);
+}
+.tolt[data-microtip-position="left"]::before,
+.tolt[data-microtip-position="left"]::after {
+  bottom: auto;
+  left: auto;
+  right: 100%;
+  top: 50%;
+  transform: translate3d(10px, -50%, 0);
+}
+.tolt[data-microtip-position="left"]::after {
+  margin-right: 11px;
+}
+.tolt[data-microtip-position="left"]:hover::before,
+.tolt[data-microtip-position="left"]:hover::after {
+  transform: translate3d(0, -50%, 0);
+}
+.tolt[data-microtip-position="right"]::before,
+.tolt[data-microtip-position="right"]::after {
+  bottom: auto;
+  left: 100%;
+  top: 50%;
+  transform: translate3d(-10px, -50%, 0);
+}
+.tolt[data-microtip-position="right"]::after {
+  margin-left: 11px;
+}
+.tolt[data-microtip-position="right"]:hover::before,
+.tolt[data-microtip-position="right"]:hover::after {
+  transform: translate3d(0, -50%, 0);
+}
+.tolt[data-microtip-size="small"]::after {
+  white-space: initial;
+  width: 80px;
+}
+.tolt[data-microtip-size="medium"]::after {
+  white-space: initial;
+  width: 150px;
+}
+.tolt[data-microtip-size="large"]::after {
+  white-space: initial;
+  width: 260px;
+}
