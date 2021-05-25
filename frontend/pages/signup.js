@@ -15,6 +15,7 @@ import Link from "next/link";
 import Router from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../actions/userActions";
+import Layout from "../components/layout";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const SignUp = () => {
   };
 
   return (
-    <main>
+    <Layout>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
           <Row
@@ -148,7 +149,7 @@ const SignUp = () => {
           </Row>
         </Container>
       </section>
-    </main>
+    </Layout>
   );
 };
 

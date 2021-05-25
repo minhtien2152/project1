@@ -7,6 +7,9 @@ import axios from "axios";
 import styles from "../../styles/profilePage.module.scss";
 import LikeList from "../../components/profile/LikeList";
 import Head from "next/head";
+import Comments from "../../components/profile/Comments";
+import ChangeProfile from "../../components/profile/ChangeProfile";
+import ChangePassword from "../../components/profile/ChangePassword";
 const LIKE_LIST = "Likelist";
 const COMMENT = "Comment";
 const EDIT_INFO = "EditInfo";
@@ -14,9 +17,9 @@ const PASSWORD = "Password";
 
 const menuList = [
   ["fas fa-star", "Danh sách yêu thích", LIKE_LIST, <LikeList />],
-  ["far fa-comment-dots", "Đánh giá", COMMENT],
-  ["fas fa-user-edit", "Chỉnh sửa thông tin", EDIT_INFO],
-  ["fas fa-key", "Thay đổi mật khẩu", PASSWORD],
+  ["far fa-comment-dots", "Đánh giá", COMMENT, <Comments />],
+  ["fas fa-user-edit", "Chỉnh sửa thông tin", EDIT_INFO, <ChangeProfile />],
+  ["fas fa-key", "Thay đổi mật khẩu", PASSWORD, <ChangePassword />],
 ];
 
 const Profile = () => {
@@ -30,8 +33,6 @@ const Profile = () => {
   const [screen, setScreen] = useState(LIKE_LIST);
 
   useEffect(() => {
-    console.log(id);
-    console.log(axios.defaults.headers.common["Authorization"]);
     dispatch(getProfile(id));
   }, [dispatch, id]);
 
@@ -80,7 +81,9 @@ const Profile = () => {
             </ul>
           </div>
 
-          {screen === LIKE_LIST && menuList[0][3]}
+          {/* {
+          screen === LIKE_LIST && menuList[0][3]} */}
+          {menuList.map((s, i) => screen === s[2] && s[3])}
         </div>
       </div>
     </div>

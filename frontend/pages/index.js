@@ -13,6 +13,7 @@ import { bindActionCreators } from "redux";
 import { listCourses } from "../actions/courseActions";
 import { useEffect } from "react";
 import { wrapper } from "../store";
+import Layout from "../components/layout";
 
 const Index = (props) => {
   // useEffect(() => {
@@ -60,7 +61,7 @@ const Index = (props) => {
   };
 
   return (
-    <>
+    <Layout>
       <div
         id="home"
         style={{ backgroundImage: "url(/images/header-bg.jpg)" }}
@@ -116,7 +117,7 @@ const Index = (props) => {
           </div>
         </div>
       </Swiper>
-    </>
+    </Layout>
   );
 };
 

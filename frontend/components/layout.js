@@ -1,10 +1,12 @@
+import Sidebar from "./admin/Sidebar";
 import Header from "./Header";
 
-export default function Layout({ children }) {
+const Layout = ({ children, admin }) => {
   return (
     <div>
-      <Header />
+      {!admin ? <Header /> : <Sidebar />}
       <main>{children}</main>
     </div>
   );
-}
+};
+export default Layout;

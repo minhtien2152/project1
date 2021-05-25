@@ -13,6 +13,7 @@ import Router from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/userActions";
+import Layout from "../components/layout";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,11 +24,11 @@ const Login = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
 
-  useEffect(() => {
-    if (localStorage.getItem("userInfo")) {
-      Router.push("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem("userInfo")) {
+  //     Router.push("/");
+  //   }
+  // }, []);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ const Login = () => {
   };
 
   return (
-    <main>
+    <Layout>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
           <Row
@@ -119,7 +120,7 @@ const Login = () => {
           </Row>
         </Container>
       </section>
-    </main>
+    </Layout>
   );
 };
 export default Login;
