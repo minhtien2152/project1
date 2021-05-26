@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require ("mongoose");
 
 const pageSchema = mongoose.Schema({
   name: {
@@ -20,4 +20,4 @@ const pageSchema = mongoose.Schema({
 
 const Page = mongoose.model("Page", pageSchema);
 
-export default Page;
+module.exports = Page;

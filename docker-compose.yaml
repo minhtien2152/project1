@@ -12,8 +12,7 @@ services:
     ports:
       - "8081:27017"
     volumes:
-      - ./database/log:/var/log/mongodb
-      - ./database/data:/data
+      - mongodata:/data/db
       # - ./Backend/Database/startup:/Backend/Database/startup:ro
     networks:
       backend:
@@ -40,6 +39,8 @@ services:
     networks:
       backend:
         ipv4_address: "10.1.0.3"
+volumes:
+  mongodata:
 networks:
   backend:
     ipam:

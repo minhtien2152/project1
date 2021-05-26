@@ -9,7 +9,7 @@ exports.deleteOne = Model => async (req, res, next) => {
             return next(new AppError(404, 'fail', 'No document found with that id'), req, res, next);
         }
 
-        res.status(204).json({
+        res.status(200).json({
             status: 'success',
             data: null,
             message:"deleted one document"
@@ -79,7 +79,9 @@ exports.getOne = Model => async (req, res, next) => {
 
 exports.getAll = Model => async (req, res, next) => {
     try {
-        const features = new APIFeatures(Model.find(), req.query)
+        const {limit,sort,page, ...rest} = req.query
+        const sortAndPaginate = {limit,sort,page}
+        const features = new APIFeatures(Model.find({...rest}), sortAndPaginate)
             .sort()
             .paginate();
 

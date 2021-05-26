@@ -14,6 +14,9 @@ const app = express();
 const globalErrHandler = require('./controllers/errorController');
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const pageRoutes = require('./routes/pageRoutes');
+const crawlRoutes = require('./routes/crawlRoutes');
 const AppError = require('./utils/appError');
 
 
@@ -62,6 +65,9 @@ var upload = multer({ storage: storage });
 
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/pages', pageRoutes);
+app.use('/api/crawl', crawlRoutes);
 
 app.post("/uploadfile", upload.single("myFiles"), (req, res, next) => {
   const file = req.file;
@@ -89,7 +95,12 @@ app.use('*', (req, res, next) => {
   const err = new AppError(404, 'fail', 'undefined route');
   next(err, req, res, next);
 });
-
+app.on('uncaughtException', err => {
+  console.log(`Uncaught Exception: ${err.message}`)
+  process.exit(1)
+})
 app.use(globalErrHandler);
+
+
 
 module.exports = app;
