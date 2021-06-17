@@ -79,9 +79,17 @@ exports.getOne = Model => async (req, res, next) => {
 
 exports.getAll = Model => async (req, res, next) => {
     try {
-        const {limit,sort,page, ...rest} = req.query
+        const {limit,sort,page,keyword, ...rest} = req.query
+        const k = keyword
+        ? {
+            title: {
+              $regex: keyword,
+              $options: "i",
+            },
+          }
+        : {};
         const sortAndPaginate = {limit,sort,page}
-        const features = new APIFeatures(Model.find({...rest}), sortAndPaginate)
+        const features = new APIFeatures(Model.find({...rest, ...k}), sortAndPaginate)
             .sort()
             .paginate();
 

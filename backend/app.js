@@ -17,6 +17,9 @@ const courseRoutes = require('./routes/courseRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const pageRoutes = require('./routes/pageRoutes');
 const crawlRoutes = require('./routes/crawlRoutes');
+const instructorRoutes = require('./routes/instructorRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+
 const AppError = require('./utils/appError');
 
 
@@ -68,6 +71,8 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/pages', pageRoutes);
 app.use('/api/crawl', crawlRoutes);
+app.use('/api/instructors', instructorRoutes);
+app.use('/api/categories', categoryRoutes);
 
 app.post("/uploadfile", upload.single("myFiles"), (req, res, next) => {
   const file = req.file;

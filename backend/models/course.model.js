@@ -20,7 +20,7 @@ const courseSchema = mongoose.Schema(
         default: "img"}
     },
     url: { type: String },
-    price: { type: String },
+    price: { type: Number },
     duration: { type: String },
     sale_detail: { type: Number },
   },
@@ -28,7 +28,7 @@ const courseSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
+courseSchema.index({ title: 1})
 const Course = mongoose.model("Course", courseSchema);
 
 module.exports = Course;
