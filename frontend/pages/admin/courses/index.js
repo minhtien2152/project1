@@ -8,22 +8,32 @@ import styles from "../../../styles/adminCourses.module.scss";
 
 import { useRouter } from "next/router";
 import ListingTable from "../../../components/admin/ListingTable";
+import ReactPaginate from "react-paginate";
 
 const headers = ["#", "Tên", "Giá", "Media", "Thời lượng", ""];
 const attributes = ["title", "price", "media.type", "duration"];
 const courses = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [pageCount, setPageCount] = useState(0);
   const courseList = useSelector((state) => state.courseList);
-  const { courses } = courseList;
+  const { courses, total } = courseList;
 
   const courseDelete = useSelector((state) => state.courseDelete);
   const { loading, success } = courseDelete;
-
+  const limit = 10;
   useEffect(() => {
-    dispatch(listCourses());
+    dispatch(listCourses({ limit, page: 1 }));
   }, [dispatch, success]);
 
+  useEffect(() => {
+    setPageCount(Math.ceil(total / limit));
+  }, [total]);
+
+  const handlePageClick = (data) => {
+    let selected = data.selected;
+    dispatch(listCourses({ limit, page: selected }));
+  };
   const handleCreate = () => {
     router.push(router.pathname + "/new");
   };
@@ -39,20 +49,11 @@ const courses = () => {
     }
   };
   const [query, setQuery] = useState("");
-  const [filtered, setFiltered] = useState([]);
 
-  useEffect(() => {
-    if (courses?.length > 0) setFiltered(courses);
-  }, [courses]);
-
-  useEffect(() => {
-    const regex = new RegExp(query, "gi");
-    setFiltered(
-      courses?.filter((course) => {
-        return course?.title?.match(regex);
-      })
-    );
-  }, [query]);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    dispatch(listCourses({ keyword: query, limit, page: 1 }));
+  };
 
   return (
     <Layout admin>
@@ -62,7 +63,7 @@ const courses = () => {
         <Card border="light" className="shadow-sm mb-4">
           <Card.Body className="pb-0">
             <div className="flex justify-between">
-              <Form className="w-72">
+              <Form className="w-72" onSubmit={(e) => handleSearch(e)}>
                 <Form.Group className="mb-3">
                   <InputGroup>
                     <InputGroup.Text>
@@ -88,13 +89,26 @@ const courses = () => {
             <ListingTable
               headers={headers}
               attributes={attributes}
-              data={filtered}
+              data={courses}
               open={handleOpen}
               update={handleUpdate}
               del={handleDelete}
             ></ListingTable>
           </Card.Body>
         </Card>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          subContainerClassName={"pages pagination"}
+          activeClassName={"active"}
+        />
       </div>
     </Layout>
   );

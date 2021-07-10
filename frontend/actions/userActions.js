@@ -1,6 +1,9 @@
 import axios from "axios";
 import { BACKEND_API } from "../config";
 import {
+  USER_ADD_COURSE_FAIL,
+  USER_ADD_COURSE_REQUEST,
+  USER_ADD_COURSE_SUCCESS,
   USER_COURSES_FAIL,
   USER_COURSES_REQUEST,
   USER_COURSES_SUCCESS,
@@ -175,6 +178,34 @@ export const listUsers = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const addFavCourse = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_ADD_COURSE_REQUEST,
+    });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const { user } = userInfo;
+    const { data } = await axios.post(
+      `${BACKEND_API}/api/users/${user._id}/courses/${id}`
+    );
+    console.log(user._id);
+    dispatch({
+      type: USER_ADD_COURSE_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ADD_COURSE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

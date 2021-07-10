@@ -21,7 +21,11 @@ export const instructorListReducer = (state = {}, action) => {
     case INSTRUCTOR_LIST_REQUEST:
       return { loading: true, instructors: [] };
     case INSTRUCTOR_LIST_SUCCESS:
-      return { loading: false, instructors: action.payload };
+      return {
+        loading: false,
+        instructors: action.payload.data,
+        total: action.payload.total,
+      };
     case INSTRUCTOR_LIST_FAIL:
       return { loading: false, error: action.payload };
 

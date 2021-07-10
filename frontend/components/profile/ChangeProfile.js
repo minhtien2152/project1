@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import styles from "../../styles/changeProfile.module.scss";
 
@@ -13,16 +13,31 @@ const ChangeProfile = () => {
   const { profile } = userProfile;
 
   const [gender, setGender] = useState("");
-
+  const fileUploader = useRef();
+  const [avatar, setAvatar] = useState(null);
+  const handleAvaClick = () => {
+    fileUploader.current.click();
+  };
+  const onAvatarChange = (e) => {
+    setAvatar([...e.target.files]);
+  };
   useEffect(() => {
     if (profile) setGender(profile.gender);
   }, [profile]);
   return (
     <div className={styles.container}>
       <div className={styles.title}>Chỉnh sửa hồ sơ</div>
+      <input
+        className="form-control-file"
+        type="file"
+        onChange={onAvatarChange}
+        accept="image/*"
+        style={{ display: "none" }}
+        ref={fileUploader}
+      />
       {profile && (
         <div className={styles.content}>
-          <div className={styles.edit_avatar}>
+          <div className={styles.edit_avatar} onClick={handleAvaClick}>
             <div className={styles.avatar}>
               <img className={styles.profile_img} src={profile.avatar} />
             </div>

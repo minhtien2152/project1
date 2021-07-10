@@ -23,6 +23,7 @@ import Link from "next/link";
 import { listInstructorDetail } from "../../actions/instructorActions";
 import CommentModal from "../../components/CommentModal";
 import { listComments } from "../../actions/commentActions";
+import { addFavCourse } from "../../actions/userActions";
 const CoursePage = (props) => {
   const courseDetails = useSelector((state) => state.courseDetails);
   const { loading: courseLoading, error: courseError, course } = courseDetails;
@@ -53,8 +54,13 @@ const CoursePage = (props) => {
   useEffect(() => {
     if (course?.page) dispatch(listPageDetails(course.page));
     if (course?.instructor) dispatch(listInstructorDetail(course.instructor));
-    if (course?._id) dispatch(listComments({ course: course._id }));
+    if (course?._id)
+      dispatch(listComments({ course: course._id, populate: "user" }));
   }, [course]);
+
+  const handleAddFavCourse = () => {
+    if (course?._id) dispatch(addFavCourse(course?._id));
+  };
 
   return (
     <Layout>
@@ -113,29 +119,38 @@ const CoursePage = (props) => {
                     )}
                   </Card.Header>
                   <Card.Body>
-                    {comments?.map((comment) => (
-                      <div className={styles.comment}>
-                        <div className={styles.ava}>
-                          <img src={comment?.user?.avatar} />
+                    {comments?.length > 0 ? (
+                      comments?.map((comment) => (
+                        <div className={styles.comment}>
+                          <div className={styles.ava}>
+                            <img src={comment.user.avatar} />
+                          </div>
+                          <div className={styles.content_block}>
+                            <div className={styles.name}>
+                              {comment?.user?.name}
+                            </div>
+                            <div className={styles.rating}>
+                              {[...Array(comment?.rating)].map((x) => (
+                                <i class="fas fa-star"></i>
+                              ))}
+                              {[...Array(5 - comment?.rating)].map((x) => (
+                                <i class="far fa-star"></i>
+                              ))}
+                            </div>
+                            <div className={styles.content}>
+                              {comment?.content}
+                            </div>
+                          </div>
                         </div>
-                        <div className={styles.content_block}>
-                          <div className={styles.name}>
-                            {comment?.user?.name}
-                          </div>
-                          <div className={styles.rating}>
-                            {[...Array(comment?.rating)].map((x) => (
-                              <i class="fas fa-star"></i>
-                            ))}
-                            {[...Array(5 - comment?.rating)].map((x) => (
-                              <i class="far fa-star"></i>
-                            ))}
-                          </div>
-                          <div className={styles.content}>
-                            {comment?.content}
-                          </div>
-                        </div>
+                      ))
+                    ) : (
+                      <div
+                        className="text-center flex justify-center items-center"
+                        style={{ minHeight: "100px" }}
+                      >
+                        <i className="fas fa-box-open"></i> Chưa có đánh giá nào
                       </div>
-                    ))}
+                    )}
                   </Card.Body>
                 </Card>
               </Col>
@@ -188,7 +203,11 @@ const CoursePage = (props) => {
                       </Button>
                     </ListGroup.Item>
                     <ListGroup.Item>
-                      <Button variant="danger" className="btn-block">
+                      <Button
+                        variant="danger"
+                        className="btn-block"
+                        onClick={handleAddFavCourse}
+                      >
                         Thêm vào danh sách yêu thích
                       </Button>
                     </ListGroup.Item>

@@ -7,26 +7,33 @@ import { Card, Form, InputGroup } from "@themesberg/react-bootstrap";
 import styles from "../../styles/courseQuery.module.scss";
 import Link from "next/link";
 import ReactPaginate from "react-paginate";
+import { listCategories } from "../../actions/categoryActions";
 
 const index = () => {
   const dispatch = useDispatch();
   const limit = 10;
   const [pageCount, setPageCount] = useState(0);
   const router = useRouter();
-  const { s, cat } = router.query;
-
+  const { s } = router.query;
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
   const courseList = useSelector((state) => state.courseList);
   const { loading, error, courses, total } = courseList;
 
   const [query, setQuery] = useState("");
-
+  const [cat, setCat] = useState("");
   const handleSearch = (e) => {
     e.preventDefault();
     router.push({ query: { s: query } });
   };
   useEffect(() => {
-    dispatch(listCourses({ keyword: s, category: cat, limit, page: 1 }));
+    if (cat)
+      dispatch(listCourses({ keyword: s, category: cat, limit, page: 1 }));
+    else dispatch(listCourses({ keyword: s, limit, page: 1 }));
   }, [s, cat]);
+  useEffect(() => {
+    dispatch(listCategories());
+  }, []);
 
   useEffect(() => {
     setPageCount(Math.ceil(total / limit));
@@ -52,6 +59,17 @@ const index = () => {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search"
                   />
+                  <Form.Select
+                    onChange={(e) => {
+                      setCat(e.target.value);
+                      console.log(e.target.value);
+                    }}
+                  >
+                    <option value="">Chọn danh mục</option>
+                    {categories?.map((category) => (
+                      <option value={category._id}>{category.name}</option>
+                    ))}
+                  </Form.Select>
                 </InputGroup>
               </Form.Group>
             </Form>

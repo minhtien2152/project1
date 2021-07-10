@@ -19,17 +19,19 @@ import {
 } from "../constants/instructorConstants";
 import { uploadImage } from "./imageActions";
 
-export const listInstructor = () => async (dispatch) => {
+export const listInstructor = (body) => async (dispatch) => {
   try {
     dispatch({
       type: INSTRUCTOR_LIST_REQUEST,
     });
 
-    const { data } = await axios.get(`${BACKEND_API}/api/instructors`);
+    const { data } = await axios.get(`${BACKEND_API}/api/instructors`, {
+      params: body,
+    });
 
     dispatch({
       type: INSTRUCTOR_LIST_SUCCESS,
-      payload: data.data,
+      payload: data,
     });
   } catch (error) {
     dispatch({

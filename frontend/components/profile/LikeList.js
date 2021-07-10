@@ -25,7 +25,7 @@ const LikeList = () => {
       </Head>
       <div className={styles.title}>Danh sách yêu thích của bạn</div>
       <div>
-        {courses?.length &&
+        {courses?.length > 0 ? (
           courses.map((course) => (
             <div className={styles.course}>
               <img
@@ -56,7 +56,16 @@ const LikeList = () => {
                 </a>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <div
+            className="text-center flex justify-center items-center"
+            style={{ minHeight: "100px" }}
+          >
+            <i className="fas fa-box-open"></i> Bạn chưa có khóa học yêu thích
+            nào
+          </div>
+        )}
       </div>
     </div>
   );

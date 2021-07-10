@@ -39,6 +39,9 @@ const Profile = () => {
 
   return (
     <Layout>
+      <Head>
+        {profile?.name && <title>Trang cá nhân của {profile.name}</title>}
+      </Head>
       <div className={styles.main_page}>
         <div className={`container ${styles.layout}`}>
           <div className={`${styles.container} ${styles.header_container}`}>

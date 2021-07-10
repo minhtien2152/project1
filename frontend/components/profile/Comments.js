@@ -35,7 +35,7 @@ const LikeList = () => {
       </Head>
       <div className={styles.title}>Các đánh giá của bạn</div>
       <div>
-        {comments?.length &&
+        {comments?.length > 0 ? (
           comments.map((comment) => (
             <div className={styles.comment}>
               <div className={styles.course_title}>{comment.course.title}</div>
@@ -57,7 +57,15 @@ const LikeList = () => {
                 <i className="fas fa-trash" />
               </Button>
             </div>
-          ))}
+          ))
+        ) : (
+          <div
+            className="text-center flex justify-center items-center"
+            style={{ minHeight: "100px" }}
+          >
+            <i className="fas fa-box-open"></i> Bạn Chưa có đánh giá nào
+          </div>
+        )}
       </div>
     </div>
   );

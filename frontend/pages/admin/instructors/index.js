@@ -11,22 +11,19 @@ import {
   deleteInstructor,
   listInstructor,
 } from "../../../actions/instructorActions";
+import ReactPaginate from "react-paginate";
 
-const headers = ["#", "Tên", "Đường dẫn", ""];
-const attributes = ["name", "url"];
+const headers = ["#", "Tên", "Đường dẫn", "Trang", ""];
+const attributes = ["name", "url", "page.name"];
 
 const instructors = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const instructorList = useSelector((state) => state.instructorList);
-  const { instructors } = instructorList;
+  const { instructors, total } = instructorList;
 
   const instructorDelete = useSelector((state) => state.instructorDelete);
   const { loading, error, success } = instructorDelete;
-
-  useEffect(() => {
-    dispatch(listInstructor({ populate: "Page" }));
-  }, [dispatch, success]);
 
   const handleCreate = () => {
     router.push(router.pathname + "/new");
@@ -43,20 +40,33 @@ const instructors = () => {
     }
   };
   const [query, setQuery] = useState("");
-  const [filtered, setFiltered] = useState([]);
-
+  const [pageCount, setPageCount] = useState(0);
+  const limit = 10;
   useEffect(() => {
-    if (instructors?.length > 0) setFiltered(instructors);
-  }, [instructors]);
-
+    dispatch(listInstructor({ limit, page: 1, populate: "page" }));
+  }, [dispatch, success]);
   useEffect(() => {
-    const regex = new RegExp(query, "gi");
-    setFiltered(
-      instructors?.filter((instructor) => {
-        return instructor?.name?.match(regex);
+    setPageCount(Math.ceil(total / limit));
+  }, [total]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    dispatch(
+      listInstructor({ keyword: query, limit, page: 1, populate: "page" })
+    );
+  };
+  const handlePageClick = (data) => {
+    let selected = data.selected;
+    dispatch(
+      listInstructor({
+        keyword: query,
+        limit,
+        page: selected,
+        populate: "page",
       })
     );
-  }, [query]);
+  };
+
   return (
     <Layout admin>
       <div>Danh sách các giảng viên</div>
@@ -64,7 +74,7 @@ const instructors = () => {
         <Card border="light" className="shadow-sm mb-4">
           <Card.Body className="pb-0">
             <div className="flex justify-between">
-              <Form className="w-72">
+              <Form className="w-72" onSubmit={handleSearch}>
                 <Form.Group className="mb-3">
                   <InputGroup>
                     <InputGroup.Text>
@@ -89,13 +99,26 @@ const instructors = () => {
             <ListingTable
               headers={headers}
               attributes={attributes}
-              data={filtered}
+              data={instructors}
               open={handleOpen}
               update={handleUpdate}
               del={handleDelete}
             ></ListingTable>
           </Card.Body>
         </Card>
+        <ReactPaginate
+          previousLabel={"previous"}
+          nextLabel={"next"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          subContainerClassName={"pages pagination"}
+          activeClassName={"active"}
+        />
       </div>
     </Layout>
   );

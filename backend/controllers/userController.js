@@ -35,7 +35,7 @@ exports.getCourses = async (req, res, next) => {
 exports.addFavCourse = async (req, res, next) => {
   try {
     await User.updateOne(
-      { _id: req.params.id },
+      { _id: req.params.id, courses: { $nin: [req.params.idcourse] } },
       { $push: { courses: [req.params.idcourse] } }
     );
 

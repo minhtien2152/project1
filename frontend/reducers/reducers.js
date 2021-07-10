@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 
 import {
+  userAddCourseReducer,
   userCoursesReducer,
   userListReducer,
   userLoginReducer,
@@ -50,6 +51,7 @@ const reducer = combineReducers({
   userProfile: userProfileReducer,
   userCourses: userCoursesReducer,
   userList: userListReducer,
+  userAddCourse: userAddCourseReducer,
 
   courseDetails: courseDetailReducer,
   courseList: courseListReducer,
