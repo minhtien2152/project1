@@ -1,0 +1,14 @@
+.course {
+  display: flex;
+  .img {
+    display: block;
+    img {
+      height: 100px;
+    }
+    margin-right: 10px;
+  }
+  .title {
+    color: blue;
+    font-weight: bold;
+  }
+}

@@ -4,6 +4,9 @@ import {
   USER_COURSES_FAIL,
   USER_COURSES_REQUEST,
   USER_COURSES_SUCCESS,
+  USER_LIST_FAIL,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -151,6 +154,29 @@ export const getUserCourses = (id) => async (dispatch) => {
       type: USER_COURSES_FAIL,
       payload:
         error.message && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listUsers = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_LIST_REQUEST,
+    });
+
+    const { data } = await axios.get(`${BACKEND_API}/api/users`);
+
+    dispatch({
+      type: USER_LIST_SUCCESS,
+      payload: data.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
     });

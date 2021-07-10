@@ -8,9 +8,19 @@ import {
   SidebarFooter,
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
+import Link from "next/link";
+
+const nav = [
+  ["Người dùng", "/users", "fas fa-user-friends"],
+  ["Khóa học", "/courses", "fas fa-book-open"],
+  ["Trang khóa học", "/pages", "fas fa-bookmark"],
+  ["Giảng viên", "/instructors", "fas fa-chalkboard-teacher"],
+  ["Danh mục", "/categories", "fas fa-align-justify"],
+];
+const basePath = "/admin";
 const Sidebar = () => {
   return (
-    <ProSidebar breakPoint="md">
+    <ProSidebar breakPoint="md" image="/images/sidebar_bg.jpg">
       <SidebarHeader>
         <div
           style={{
@@ -29,13 +39,13 @@ const Sidebar = () => {
       </SidebarHeader>
       <SidebarContent>
         <Menu iconShape="circle">
-          <MenuItem icon={<i class="fas fa-tachometer-alt"></i>}>
-            Dashboard
-          </MenuItem>
-          <SubMenu title="Components">
-            <MenuItem>Component 1</MenuItem>
-            <MenuItem>Component 2</MenuItem>
-          </SubMenu>
+          {nav.map((item) => (
+            <MenuItem icon={<i className={item[2]}></i>}>
+              <Link href={basePath + item[1]}>
+                <a>{item[0]}</a>
+              </Link>
+            </MenuItem>
+          ))}
         </Menu>
       </SidebarContent>
       <SidebarFooter style={{ textAlign: "center" }}>
@@ -44,16 +54,7 @@ const Sidebar = () => {
           style={{
             padding: "20px 24px",
           }}
-        >
-          <a
-            href="https://github.com/azouaoui-med/react-pro-sidebar"
-            target="_blank"
-            className="sidebar-btn"
-            rel="noopener noreferrer"
-          >
-            <span> source</span>
-          </a>
-        </div>
+        ></div>
       </SidebarFooter>
     </ProSidebar>
   );

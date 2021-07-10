@@ -1,0 +1,103 @@
+import { Card, Form, InputGroup } from "@themesberg/react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCourse, listCourses } from "../../../actions/courseActions";
+
+import Layout from "../../../components/layout";
+import styles from "../../../styles/adminCourses.module.scss";
+
+import { useRouter } from "next/router";
+import ListingTable from "../../../components/admin/ListingTable";
+
+const headers = ["#", "Tên", "Giá", "Media", "Thời lượng", ""];
+const attributes = ["title", "price", "media.type", "duration"];
+const courses = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const courseList = useSelector((state) => state.courseList);
+  const { courses } = courseList;
+
+  const courseDelete = useSelector((state) => state.courseDelete);
+  const { loading, success } = courseDelete;
+
+  useEffect(() => {
+    dispatch(listCourses());
+  }, [dispatch, success]);
+
+  const handleCreate = () => {
+    router.push(router.pathname + "/new");
+  };
+  const handleOpen = (id) => {
+    router.push(router.pathname + "/" + id);
+  };
+  const handleUpdate = (id) => {
+    router.push(router.pathname + "/" + id + "/edit");
+  };
+  const handleDelete = (id) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa ?")) {
+      dispatch(deleteCourse(id));
+    }
+  };
+  const [query, setQuery] = useState("");
+  const [filtered, setFiltered] = useState([]);
+
+  useEffect(() => {
+    if (courses?.length > 0) setFiltered(courses);
+  }, [courses]);
+
+  useEffect(() => {
+    const regex = new RegExp(query, "gi");
+    setFiltered(
+      courses?.filter((course) => {
+        return course?.title?.match(regex);
+      })
+    );
+  }, [query]);
+
+  return (
+    <Layout admin>
+      <div>Danh sách khóa học</div>
+
+      <div>
+        <Card border="light" className="shadow-sm mb-4">
+          <Card.Body className="pb-0">
+            <div className="flex justify-between">
+              <Form className="w-72">
+                <Form.Group className="mb-3">
+                  <InputGroup>
+                    <InputGroup.Text>
+                      <i class="fas fa-search"></i>
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      placeholder="Search"
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </InputGroup>
+                </Form.Group>
+              </Form>
+              <button
+                type="button"
+                className="btn btn-danger mb-3"
+                onClick={handleCreate}
+              >
+                Tạo mới
+              </button>
+            </div>
+
+            <ListingTable
+              headers={headers}
+              attributes={attributes}
+              data={filtered}
+              open={handleOpen}
+              update={handleUpdate}
+              del={handleDelete}
+            ></ListingTable>
+          </Card.Body>
+        </Card>
+      </div>
+    </Layout>
+  );
+};
+
+export default courses;

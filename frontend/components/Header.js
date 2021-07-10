@@ -13,9 +13,9 @@ import { logout, reload } from "../actions/userActions";
 
 const navigation = [
   { name: "Trang chủ", href: "/", current: true },
-  { name: "Danh mục", href: "/login", current: false },
-  { name: "Nhà cung cấp", href: "/signup", current: false },
-  { name: "Liên hệ", href: "#", current: false },
+  // { name: "Danh mục", href: "/login", current: false },
+  // { name: "Nhà cung cấp", href: "/signup", current: false },
+  // { name: "Liên hệ", href: "#", current: false },
 ];
 
 function classNames(...classes) {
@@ -129,7 +129,7 @@ export default function Header() {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-9 w-9 rounded-full bg-white"
-                                src={`${userInfo && userInfo.user.avatar}`}
+                                src={`${userInfo && userInfo?.user?.avatar}`}
                                 alt=""
                               />
                             </Menu.Button>
@@ -153,7 +153,7 @@ export default function Header() {
                                 {({ active }) => (
                                   <Link
                                     href="/profile/[id]"
-                                    as={`/profile/${userInfo.user._id}`}
+                                    as={`/profile/${userInfo?.user?._id}`}
                                   >
                                     <a
                                       className={classNames(
@@ -166,19 +166,22 @@ export default function Header() {
                                   </Link>
                                 )}
                               </Menu.Item>
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <a
-                                    href="#"
-                                    className={classNames(
-                                      active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
-                                    )}
-                                  >
-                                    Settings
-                                  </a>
-                                )}
-                              </Menu.Item>
+                              {userInfo?.user?.role === "admin" && (
+                                <Menu.Item>
+                                  {({ active }) => (
+                                    <Link href="/admin">
+                                      <a
+                                        className={classNames(
+                                          active ? "bg-gray-100" : "",
+                                          "block px-4 py-2 text-sm text-gray-700"
+                                        )}
+                                      >
+                                        Admin panel
+                                      </a>
+                                    </Link>
+                                  )}
+                                </Menu.Item>
+                              )}
                               <Menu.Item>
                                 {({ active }) => (
                                   <a
@@ -205,7 +208,16 @@ export default function Header() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {navigation.map((item) => (
+              <Link href="/">
+                <a
+                  className={
+                    "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                  }
+                >
+                  Trang chủ
+                </a>
+              </Link>
+              {/* {navigation.map((item) => (
                 <Link key={item.name} href={item.href}>
                   <a
                     className={classNames(
@@ -219,7 +231,7 @@ export default function Header() {
                     {item.name}
                   </a>
                 </Link>
-              ))}
+              ))} */}
             </div>
           </Disclosure.Panel>
         </>

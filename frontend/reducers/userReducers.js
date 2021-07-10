@@ -2,6 +2,9 @@ import {
   USER_COURSES_FAIL,
   USER_COURSES_REQUEST,
   USER_COURSES_SUCCESS,
+  USER_LIST_FAIL,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -66,6 +69,19 @@ export const userCoursesReducer = (state = { courses: [] }, action) => {
     case USER_COURSES_SUCCESS:
       return { loading: false, courses: action.payload };
     case USER_COURSES_FAIL:
+      return { loading: true, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+export const userListReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case USER_LIST_REQUEST:
+      return { loading: true };
+    case USER_LIST_SUCCESS:
+      return { loading: false, users: action.payload };
+    case USER_LIST_FAIL:
       return { loading: true, error: action.payload };
 
     default:

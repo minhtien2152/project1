@@ -1,4 +1,4 @@
-const mongoose = require ("mongoose");
+const mongoose = require("mongoose");
 
 const courseSchema = mongoose.Schema(
   {
@@ -14,21 +14,36 @@ const courseSchema = mongoose.Schema(
       default: 0,
     },
     media: {
-      url :{type: String},
-      type:{type: String,
-        enum: ["img", "video"],
-        default: "img"}
+      value: { type: String },
+      type: {
+        type: String,
+        enum: ["img_cdn", "img_link", "video_link"],
+        default: "img_link",
+      },
     },
     url: { type: String },
     price: { type: Number },
     duration: { type: String },
     sale_detail: { type: Number },
+    category: { type: String, ref: "Category" },
+    page: { type: String, ref: "Page" },
+    instructor: { type: String, ref: "Instructor" },
+    thumbnail: {
+      type: {
+        type: String,
+        enum: ["link", "cdn"],
+        default: "link",
+      },
+      value: { type: String },
+    },
+    knowledge: { type: String },
+    currency: { type: String },
   },
   {
     timestamps: true,
   }
 );
-courseSchema.index({ title: 1})
+courseSchema.index({ title: "text" });
 const Course = mongoose.model("Course", courseSchema);
 
 module.exports = Course;

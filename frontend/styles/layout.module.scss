@@ -1,0 +1,12 @@
+.adminLayout {
+  height: 100%;
+  display: flex;
+  position: relative;
+  main {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+}

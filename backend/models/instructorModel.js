@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const instructorSchema = mongoose.Schema({
   name: {
@@ -8,13 +8,11 @@ const instructorSchema = mongoose.Schema({
   url: {
     type: String,
   },
-  avatar:{
-    type: String,
-  },
+  avatar: { type: { type: String }, value: { type: String } },
   description: {
     type: String,
   },
-  page_id: {
+  page: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Page",
   },
@@ -22,4 +20,4 @@ const instructorSchema = mongoose.Schema({
 
 const Instructor = mongoose.model("Instructor", instructorSchema);
 
-module.exports =  Instructor;
+module.exports = Instructor;

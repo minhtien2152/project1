@@ -14,11 +14,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/userActions";
 import Layout from "../components/layout";
-
+import { useRouter } from "next/router";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -30,6 +30,9 @@ const Login = () => {
   //   }
   // }, []);
 
+  useEffect(() => {
+    if (userInfo?.status === "success") router.push("/");
+  }, [userInfo]);
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(login(email, password));

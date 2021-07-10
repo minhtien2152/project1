@@ -3,11 +3,12 @@ module.exports = {
     return [
       {
         source: "/api/:slug*",
-        destination: "http://localhost:8086/api/:slug*",
+        destination: "http://localhost:8088/api/:slug*",
+      },
+      {
+        source: "/cdn/:slug*",
+        destination: "http://localhost:8088/cdn/:slug*",
       },
     ];
-  },
-  env: {
-    api: "http://localhost:8086",
   },
 };

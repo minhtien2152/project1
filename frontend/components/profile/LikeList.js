@@ -25,16 +25,25 @@ const LikeList = () => {
       </Head>
       <div className={styles.title}>Danh sách yêu thích của bạn</div>
       <div>
-        {courses &&
+        {courses?.length &&
           courses.map((course) => (
             <div className={styles.course}>
               <img
                 className={styles.img}
-                src={`${handleMedia(course.media.url)}`}
+                src={
+                  course?.thumbnail?.type === "cdn"
+                    ? `/cdn/${course?.thumbnail?.value}`
+                    : course?.thumbnail?.value
+                }
               />
               <div className={styles.text}>
                 <h4>{course.title}</h4>
-                <p>{course.price}</p>
+                <p>
+                  {new Intl.NumberFormat("vi-VI", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(course.price)}
+                </p>
               </div>
 
               <div className={styles.del_button}>

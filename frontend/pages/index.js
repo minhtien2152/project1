@@ -7,11 +7,11 @@ import SwiperCore, { Navigation, Pagination } from "swiper";
 SwiperCore.use([Navigation, Pagination]);
 import Course from "../components/Course";
 import styles from "../styles/index.module.scss";
-
+import { useRouter } from "next/router";
 import { connect, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { listCourses } from "../actions/courseActions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { wrapper } from "../store";
 import Layout from "../components/layout";
 
@@ -19,10 +19,15 @@ const Index = (props) => {
   // useEffect(() => {
   //   props.listCourses();
   // }, [props]);
-
+  const router = useRouter();
   const courseList = useSelector((state) => state.courseList);
   const { courses } = courseList;
+  const [query, setQuery] = useState("");
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    router.push({ pathname: "/course", query: { s: query } });
+  };
   const settings = {
     preloadImages: false,
     slidesPerView: 4,
@@ -54,7 +59,7 @@ const Index = (props) => {
         spaceBetween: 15,
       },
       0: {
-        slidesPerView: 1,
+        slidesPerView: 2,
         spaceBetween: 15,
       },
     },
@@ -72,11 +77,14 @@ const Index = (props) => {
             <div className="col-xl-8 col-lg-10">
               <div className={styles.header_content}>
                 <div className="container mx-auto py-8">
-                  <input
-                    className="w-full h-16 px-3 rounded focus:outline-none focus:shadow-outline text-xl shadow-lg"
-                    type="search"
-                    placeholder="Search..."
-                  />
+                  <form onSubmit={handleSearch}>
+                    <input
+                      className="w-full h-16 px-3 rounded focus:outline-none focus:shadow-outline text-xl shadow-lg"
+                      type="search"
+                      placeholder="Search..."
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </form>
                 </div>
               </div>
             </div>

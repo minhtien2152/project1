@@ -1,12 +1,12 @@
-const mongoose = require ("mongoose");
+const mongoose = require("mongoose");
 
 const commentSchema = mongoose.Schema(
   {
-    user_id: {
+    user: {
       type: String,
       ref: "User",
     },
-    course_id: {
+    course: {
       type: String,
       ref: "Course",
     },
