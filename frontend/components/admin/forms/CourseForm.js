@@ -44,7 +44,6 @@ const schema = yup.object().shape({
         .string()
         .url("Không đúng định dạng")
         .required("Không được bỏ trống"),
-      otherwise: yup.string().required("Không được bỏ trống"),
     }),
   }),
 });
@@ -52,8 +51,11 @@ const PageForm = ({ course }) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [image, setImage] = useState([]);
-  const [file, setFile] = useState([]);
+  const [media, setMedia] = useState([]);
+  const [mediaPreview, setMediaPreview] = useState([]);
+
+  const [thumb, setThumb] = useState([]);
+  const [thumbPreview, setThumbPreview] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
   const handleClose = () => {
@@ -91,36 +93,64 @@ const PageForm = ({ course }) => {
   const watchMedia = watch("media.type");
   const watchThumbnail = watch("thumbnail.type");
 
-  const [defaultImage, setDefaultImage] = useState([]);
+  const [defaultMedia, setDefaultMedia] = useState([]);
+  const [defaultThumb, setDefaultThumb] = useState([]);
 
   useEffect(() => {
-    if (course?.thumbnail) setDefaultImage([course.thumbnail]);
+    if (course?.thumbnail?.type === "cdn")
+      setDefaultThumb([course.thumbnail.value]);
+    if (course?.media?.type === "img_cdn")
+      setDefaultMedia([course.media.value]);
   }, [course]);
 
-  const onImageChange = (event) => {
-    if (defaultImage.length > 0) {
-      deleteDefaultImage();
+  const onMediaChange = (event) => {
+    if (defaultMedia.length > 0) {
+      deleteDefaultMedia();
     }
-    setImage([...event.target.files]);
+    setMedia([...event.target.files]);
   };
-  const deletePic = (index) => {
-    const arr = [...image];
+  const onThumbChange = (event) => {
+    if (defaultThumb.length > 0) {
+      deleteDefaultThumb();
+    }
+    setThumb([...event.target.files]);
+  };
+  const deleteMedia = (index) => {
+    const arr = [...media];
     URL.revokeObjectURL(arr.splice(index, 1).preview);
-    setImage(arr);
+    setMedia(arr);
   };
-  const deleteDefaultImage = () => {
-    setDefaultImage([]);
+  const deleteThumb = (index) => {
+    const arr = [...thumb];
+    URL.revokeObjectURL(arr.splice(index, 1).preview);
+    setThumb(arr);
+  };
+  const deleteDefaultMedia = () => {
+    setDefaultMedia([]);
+  };
+  const deleteDefaultThumb = () => {
+    setDefaultThumb([]);
   };
 
   useEffect(() => {
-    setFile(
-      Object.values(image).map((file) =>
+    setMediaPreview(
+      Object.values(media).map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
       )
     );
-  }, [image]);
+  }, [media]);
+
+  useEffect(() => {
+    setThumbPreview(
+      Object.values(thumb).map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+    );
+  }, [thumb]);
 
   const courseUpdate = useSelector((state) => state.courseUpdate);
   const {
@@ -141,9 +171,9 @@ const PageForm = ({ course }) => {
     if (window.confirm("Bạn có chắc chắn muốn lưu ?")) {
       setShowModal(true);
 
-      if (course && course.name)
-        dispatch(updateCourse(page._id, data, image, defaultImage));
-      else dispatch(createCourse(data, image));
+      if (course && course._id)
+        dispatch(updateCourse(course._id, data, media, thumb));
+      else dispatch(createCourse(data, media, thumb));
     }
     console.log(data);
   };
@@ -329,11 +359,11 @@ const PageForm = ({ course }) => {
             </>
           ) : (
             <ImageUpload
-              defaultImages={defaultImage}
-              images={file}
-              onChange={onImageChange}
-              onDel={deletePic}
-              onDelDefault={deleteDefaultImage}
+              defaultImages={defaultMedia}
+              images={mediaPreview}
+              onChange={onMediaChange}
+              onDel={deleteMedia}
+              onDelDefault={deleteDefaultMedia}
             />
           )}
         </Form.Group>
@@ -370,11 +400,11 @@ const PageForm = ({ course }) => {
             </>
           ) : (
             <ImageUpload
-              defaultImages={defaultImage}
-              images={file}
-              onChange={onImageChange}
-              onDel={deletePic}
-              onDelDefault={deleteDefaultImage}
+              defaultImages={defaultThumb}
+              images={thumbPreview}
+              onChange={onThumbChange}
+              onDel={deleteThumb}
+              onDelDefault={deleteDefaultThumb}
             />
           )}
         </Form.Group>

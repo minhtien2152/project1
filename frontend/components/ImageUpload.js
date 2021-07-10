@@ -81,7 +81,7 @@ const ImageUpload = ({
         })*/}
         {defaultImages &&
           defaultImages.map((image, index) => (
-            <div style={thumb} key={image.name}>
+            <div style={thumb} key={image?.name}>
               <div style={thumbInner}>
                 <img src={`/cdn/${image}`} style={img} />
               </div>

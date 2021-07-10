@@ -90,25 +90,36 @@ export const deleteCourse = (id) => async (dispatch) => {
 };
 
 export const createCourse =
-  (course, imagesToUpload) => async (dispatch, getState) => {
+  (course, media, thumb) => async (dispatch, getState) => {
     try {
       dispatch({
         type: COURSE_CREATE_REQUEST,
       });
 
-      await dispatch(uploadImage(imagesToUpload));
+      let cos = { ...course };
+      if (media?.length > 0) {
+        await dispatch(uploadImage(media));
 
-      const {
-        imageUpload: { images },
-      } = getState();
-      const { filename } = images;
+        const {
+          imageUpload: { images },
+        } = getState();
+        const { filename } = images;
 
-      const newCourse = { ...course, thumbnail: filename };
+        cos = { ...cos, media: { type: "img_cdn", value: filename } };
+      }
 
-      const { data } = await axios.post(
-        `${BACKEND_API}/api/courses/`,
-        newCourse
-      );
+      if (thumb?.length > 0) {
+        await dispatch(uploadImage(thumb));
+
+        const {
+          imageUpload: { images },
+        } = getState();
+        const { filename } = images;
+
+        cos = { ...cos, thumbnail: { type: "cdn", value: filename } };
+      }
+
+      const { data } = await axios.post(`${BACKEND_API}/api/courses/`, cos);
 
       dispatch({
         type: COURSE_CREATE_SUCCESS,
@@ -125,27 +136,37 @@ export const createCourse =
     }
   };
 export const updateCourse =
-  (id, course, imagesToUpload, defaultImage) => async (dispatch, getState) => {
+  (id, course, media, thumb) => async (dispatch, getState) => {
     try {
       dispatch({
         type: COURSE_UPDATE_REQUEST,
       });
-      if (imagesToUpload.length > 0) {
-        await dispatch(uploadImage(imagesToUpload));
+      let cos = { ...course };
+      if (media?.length > 0) {
+        await dispatch(uploadImage(media));
 
         const {
           imageUpload: { images },
         } = getState();
         const { filename } = images;
 
-        course = { ...course, image: filename };
-      } else {
-        course = { ...course, image: defaultImage[0] };
+        cos = { ...cos, media: { type: "img_cdn", value: filename } };
+      }
+
+      if (thumb?.length > 0) {
+        await dispatch(uploadImage(thumb));
+
+        const {
+          imageUpload: { images },
+        } = getState();
+        const { filename } = images;
+
+        cos = { ...cos, thumbnail: { type: "cdn", value: filename } };
       }
       console.log(id);
       const { data } = await axios.patch(
-        `${BACKEND_API}/api/pages/${id}`,
-        page
+        `${BACKEND_API}/api/courses/${id}`,
+        cos
       );
 
       dispatch({
