@@ -48,12 +48,13 @@ export default (props) => {
               <Dropdown.Toggle as={Nav.Link} className="pt-1 px-0">
                 <div className="media d-flex align-items-center">
                   <Image
-                    src="https://dummyimage.com/600x400/000/fff"
+                    src={`${userInfo && userInfo?.user?.avatar}`}
                     className="user-avatar md-avatar rounded-circle"
                   />
+
                   <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                     <span className="mb-0 font-small fw-bold">
-                      Bonnie Green
+                      {userInfo && userInfo?.user?.name}
                     </span>
                   </div>
                 </div>

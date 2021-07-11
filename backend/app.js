@@ -19,6 +19,7 @@ const pageRoutes = require("./routes/pageRoutes");
 const crawlRoutes = require("./routes/crawlRoutes");
 const instructorRoutes = require("./routes/instructorRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const chatbotRoutes = require("./routes/chatbotRoutes");
 
 const AppError = require("./utils/appError");
 
@@ -31,12 +32,12 @@ app.use(cors());
 // Set security HTTP headers
 app.use(helmet());
 
-const limiter = rateLimit({
-  max: 150,
-  windowMs: 60 * 60 * 1000,
-  message: "Too Many Request from this IP, please try again in an hour",
-});
-app.use("/api", limiter);
+// const limiter = rateLimit({
+//   max: 150,
+//   windowMs: 60 * 60 * 1000,
+//   message: "Too Many Request from this IP, please try again in an hour",
+// });
+//app.use("/api", limiter);
 
 // Data sanitization against Nosql query injection
 app.use(expressMongoSanitize());
@@ -69,6 +70,7 @@ app.use("/api/pages", pageRoutes);
 app.use("/api/crawl", crawlRoutes);
 app.use("/api/instructors", instructorRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 
 app.post("/api/uploadfile", upload.single("file"), (req, res, next) => {
   const file = req.file;

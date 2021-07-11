@@ -169,7 +169,7 @@ export default function Header() {
                               {userInfo?.user?.role === "admin" && (
                                 <Menu.Item>
                                   {({ active }) => (
-                                    <Link href="/admin">
+                                    <Link href="/admin/user">
                                       <a
                                         className={classNames(
                                           active ? "bg-gray-100" : "",
